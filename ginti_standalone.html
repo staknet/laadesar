@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#E74C3C">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ginti">
+<link id="manifest-placeholder" rel="manifest">
+<title>Ginti Seekho</title>
+<link href="https://fonts.googleapis.com/css2?family=Mali:wght@600;700&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { min-height: 100vh; background: linear-gradient(135deg, #FFF8F0 0%, #FDE8C8 100%); display: flex; align-items: center; justify-content: center; font-family: 'Mali', cursive; padding: 16px; }
+  .app-wrapper { width: 100%; max-width: 420px; text-align: center; }
+  h1 { font-family: 'Baloo 2', cursive; font-size: 1.6rem; color: #C0392B; margin-bottom: 2px; }
+  .subtitle { font-size: 0.9rem; color: #aaa; margin-bottom: 14px; }
+  .range-wrap { background: #fff; border-radius: 16px; padding: 12px 16px; margin-bottom: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+  .range-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .range-label { font-size: 0.85rem; color: #888; font-weight: 600; }
+  .range-val { font-family: 'Baloo 2', cursive; font-size: 1.2rem; color: #E74C3C; font-weight: 800; background: #FDE8C8; border-radius: 8px; padding: 2px 12px; }
+  .quick-btns { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px; }
+  .qbtn { font-family: 'Baloo 2', cursive; font-size: 0.85rem; font-weight: 700; border: 2px solid #F5A623; border-radius: 20px; padding: 4px 14px; cursor: pointer; background: #fff; color: #E67E22; transition: all 0.15s; }
+  .qbtn.active, .qbtn:hover { background: #F5A623; color: #fff; }
+  input[type=range] { width: 100%; accent-color: #E74C3C; height: 6px; }
+  .progress { display: flex; justify-content: center; gap: 5px; margin-bottom: 14px; flex-wrap: wrap; }
+  .pdot { width: 10px; height: 10px; border-radius: 50%; background: #ddd; transition: background 0.3s; }
+  .pdot.seen { background: #F5A623; }
+  .pdot.current { background: #E74C3C; transform: scale(1.4); }
+  .card { width: 100%; min-height: 400px; background: #fff; border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.13); padding: 22px 16px 20px 16px; border: 4px solid #F5A623; margin-bottom: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .card.flip { animation: cardFlip 0.45s ease; }
+  @keyframes cardFlip { 0% { transform: rotateY(0deg) scale(1); } 50% { transform: rotateY(90deg) scale(0.95); } 100% { transform: rotateY(0deg) scale(1); } }
+  .number-display { font-family: 'Baloo 2', cursive; font-size: 4.5rem; color: #E74C3C; line-height: 1; margin-bottom: 2px; }
+  .word-en { font-size: 1.3rem; font-weight: 700; color: #E67E22; text-transform: capitalize; letter-spacing: 2px; margin-bottom: 2px; }
+  .word-hi { font-size: 1.5rem; font-weight: 700; color: #8E44AD; margin-bottom: 14px; }
+  .dots-area { width: 100%; text-align: center; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; padding: 4px; }
+  .dot-icon { width: 50px; height: 50px; flex-shrink: 0; }
+  .count-label { margin-top: 12px; font-size: 0.85rem; color: #bbb; font-style: italic; width: 100%; }
+  .btn-row { display: flex; gap: 12px; justify-content: center; }
+  .btn { font-family: 'Baloo 2', cursive; font-size: 1.15rem; font-weight: 700; border: none; border-radius: 50px; padding: 15px 0; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; box-shadow: 0 4px 14px rgba(0,0,0,0.12); flex: 1; }
+  .btn:active { transform: scale(0.95); }
+  .btn-new { background: linear-gradient(135deg, #F7971E, #FFD200); color: #fff; }
+  .btn-prev { background: linear-gradient(135deg, #a18cd1, #fbc2eb); color: #fff; }
+  #install-btn { display:none; margin: 0 auto 14px auto; font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700; background: linear-gradient(135deg,#43cea2,#185a9d); color:#fff; border:none; border-radius:50px; padding:12px 28px; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,0.15); }
+</style>
+</head>
+<body>
+<div class="app-wrapper">
+  <h1>Ginti Seekho</h1>
+  <p class="subtitle">Count &amp; Learn Numbers</p>
+  <button id="install-btn" onclick="installApp()">Add to Home Screen</button>
+  <div class="range-wrap">
+    <div class="range-top">
+      <span class="range-label">1 se / to</span>
+      <span class="range-val" id="rangeVal">5</span>
+    </div>
+    <div class="quick-btns">
+      <button class="qbtn active" onclick="setRange(5,this)">1-5</button>
+      <button class="qbtn" onclick="setRange(10,this)">1-10</button>
+      <button class="qbtn" onclick="setRange(15,this)">1-15</button>
+      <button class="qbtn" onclick="setRange(20,this)">1-20</button>
+    </div>
+    <input type="range" id="rangeSlider" min="3" max="20" value="5" oninput="sliderChange(this.value)">
+  </div>
+  <div class="progress" id="progress"></div>
+  <div class="card" id="card">
+    <div class="number-display" id="numDisplay">-</div>
+    <div class="word-en" id="wordEn"></div>
+    <div class="word-hi" id="wordHi"></div>
+    <div class="dots-area" id="dotsArea"></div>
+    <div class="count-label" id="countLabel"></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-prev" onclick="prevCard()">Back</button>
+    <button class="btn btn-new" onclick="newCard()">Next</button>
+  </div>
+</div>
+<script>
+// ── Inline Manifest ──
+const manifestData = {
+  name: "Ginti Seekho - Count and Learn",
+  short_name: "Ginti",
+  description: "Number flashcards for kids",
+  start_url: "./",
+  display: "standalone",
+  background_color: "#FFF8F0",
+  theme_color: "#E74C3C",
+  orientation: "portrait",
+  icons: [{ src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Ccircle cx='96' cy='96' r='96' fill='%23E74C3C'/%3E%3Ctext x='96' y='130' text-anchor='middle' font-size='100' font-family='sans-serif' fill='white'%3E5%3C/text%3E%3C/svg%3E", sizes: "any", type: "image/svg+xml" }]
+};
+const manifestBlob = new Blob([JSON.stringify(manifestData)], {type:'application/json'});
+document.getElementById('manifest-placeholder').href = URL.createObjectURL(manifestBlob);
+
+// ── Inline Service Worker via blob ──
+const swCode = `
+const CACHE='ginti-v3';
+self.addEventListener('install', e => self.skipWaiting());
+self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+`;
+if('serviceWorker' in navigator) {
+  const swBlob = new Blob([swCode], {type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(swBlob), {scope:'/'}).catch(()=>{});
+}
+
+// ── Install prompt ──
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault(); deferredPrompt = e;
+  document.getElementById('install-btn').style.display = 'block';
+});
+function installApp() {
+  if(deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then(()=>{ deferredPrompt=null; document.getElementById('install-btn').style.display='none'; }); }
+}
+window.addEventListener('appinstalled', () => { document.getElementById('install-btn').style.display='none'; });
+
+// ── App Logic ──
+const wordsEn=['','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty'];
+const wordsHi=['','ek','do','teen','chaar','paanch','chhah','saat','aath','nau','das','gyarah','barah','terah','chaudah','pandrah','solah','satrah','atharah','unnis','bees'];
+const ICONS={"1": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%2218%22%20fill%3D%22%23FFD700%22/%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%2210%22%20fill%3D%22%23FFA500%22/%3E%3Cline%20x1%3D%2230%22%20y1%3D%2230%22%20x2%3D%2252%22%20y2%3D%2230%22%20stroke%3D%22%23FFD700%22%20stroke-width%3D%223%22/%3E%3Cline%20x1%3D%2230%22%20y1%3D%2230%22%20x2%3D%2245%22%20y2%3D%2245%22%20stroke%3D%22%23FFD700%22%20stroke-width%3D%223%22/%3E%3Cline%20x1%3D%2230%22%20y1%3D%2230%22%20x2%3D%2230%22%20y2%3D%2252%22%20stroke%3D%22%23FFD700%22%20stroke-width%3D%223%22/%3E%3Cline%20x1%3D%2230%22%20y1%3D%2230%22%20x2%3D%2214%22%20y2%3D%2245%22%20stroke%3D%22%23FFD700%22%20stroke-width%3D%223%22/%3E%3Cline%20x1%3D%2230%22%20y1%3D%2230%22%20x2%3D%228%22%20y2%3D%2230%22%20stroke%3D%22%23FFD700%22%20stroke-width%3D%223%22/%3E%3Cline%20x1%3D%2230%22%20y1%3D%2230%22%20x2%3D%2214%22%20y2%3D%2214%22%20stroke%3D%22%23FFD700%22%20stroke-width%3D%223%22/%3E%3Cline%20x1%3D%2230%22%20y1%3D%2230%22%20x2%3D%2229%22%20y2%3D%228%22%20stroke%3D%22%23FFD700%22%20stroke-width%3D%223%22/%3E%3Cline%20x1%3D%2230%22%20y1%3D%2230%22%20x2%3D%2245%22%20y2%3D%2214%22%20stroke%3D%22%23FFD700%22%20stroke-width%3D%223%22/%3E%3C/svg%3E", "2": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Cpath%20d%3D%22M30%2010%20Q50%2010%2050%2030%20Q50%2050%2030%2050%20Q15%2045%2015%2030%20Q15%2015%2030%2010Z%22%20fill%3D%22%23C8A8E9%22/%3E%3Ccircle%20cx%3D%2238%22%20cy%3D%2225%22%20r%3D%228%22%20fill%3D%22%23F5F0FF%22/%3E%3C/svg%3E", "3": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Cpolygon%20points%3D%2230%2C5%2036%2C22%2054%2C22%2040%2C33%2045%2C50%2030%2C39%2015%2C50%2020%2C33%206%2C22%2024%2C22%22%20fill%3D%22%23FFD700%22%20stroke%3D%22%23FFA500%22%20stroke-width%3D%221%22/%3E%3C/svg%3E", "4": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Cpath%20d%3D%22M30%2048%20C10%2035%205%2020%2015%2013%20C22%208%2030%2015%2030%2015%20C30%2015%2038%208%2045%2013%20C55%2020%2050%2035%2030%2048Z%22%20fill%3D%22%23FF6B9D%22/%3E%3C/svg%3E", "5": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Cellipse%20cx%3D%2230%22%20cy%3D%2235%22%20rx%3D%2216%22%20ry%3D%2214%22%20fill%3D%22%23FF9800%22/%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2222%22%20r%3D%2210%22%20fill%3D%22%23FF9800%22/%3E%3Cellipse%20cx%3D%2222%22%20cy%3D%2216%22%20rx%3D%225%22%20ry%3D%228%22%20fill%3D%22%23FF9800%22/%3E%3Cellipse%20cx%3D%2238%22%20cy%3D%2216%22%20rx%3D%225%22%20ry%3D%228%22%20fill%3D%22%23FF9800%22/%3E%3Ccircle%20cx%3D%2225%22%20cy%3D%2222%22%20r%3D%222%22%20fill%3D%22%23333%22/%3E%3Ccircle%20cx%3D%2235%22%20cy%3D%2222%22%20r%3D%222%22%20fill%3D%22%23333%22/%3E%3Cellipse%20cx%3D%2230%22%20cy%3D%2227%22%20rx%3D%224%22%20ry%3D%222%22%20fill%3D%22%23FF7043%22/%3E%3C/svg%3E", "6": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Cellipse%20cx%3D%2230%22%20cy%3D%2236%22%20rx%3D%2218%22%20ry%3D%2214%22%20fill%3D%22%238D6E63%22/%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2222%22%20r%3D%2212%22%20fill%3D%22%238D6E63%22/%3E%3Cellipse%20cx%3D%2220%22%20cy%3D%2214%22%20rx%3D%225%22%20ry%3D%227%22%20fill%3D%22%238D6E63%22/%3E%3Cellipse%20cx%3D%2240%22%20cy%3D%2214%22%20rx%3D%225%22%20ry%3D%227%22%20fill%3D%22%238D6E63%22/%3E%3Ccircle%20cx%3D%2225%22%20cy%3D%2221%22%20r%3D%222%22%20fill%3D%22%23333%22/%3E%3Ccircle%20cx%3D%2235%22%20cy%3D%2221%22%20r%3D%222%22%20fill%3D%22%23333%22/%3E%3Cellipse%20cx%3D%2230%22%20cy%3D%2228%22%20rx%3D%225%22%20ry%3D%223%22%20fill%3D%22%23BCAAA4%22/%3E%3C/svg%3E", "7": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Cellipse%20cx%3D%2230%22%20cy%3D%2232%22%20rx%3D%2218%22%20ry%3D%2212%22%20fill%3D%22%2342A5F5%22/%3E%3Cellipse%20cx%3D%2230%22%20cy%3D%2230%22%20rx%3D%2210%22%20ry%3D%228%22%20fill%3D%22%2390CAF9%22/%3E%3Ccircle%20cx%3D%2244%22%20cy%3D%2228%22%20r%3D%223%22%20fill%3D%22%2342A5F5%22/%3E%3Cpath%20d%3D%22M10%2028%20Q5%2020%2010%2018%20Q8%2028%2014%2028Z%22%20fill%3D%22%2342A5F5%22/%3E%3Ccircle%20cx%3D%2240%22%20cy%3D%2227%22%20r%3D%221.5%22%20fill%3D%22%23333%22/%3E%3C/svg%3E", "8": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%2210%22%20fill%3D%22%23FFD700%22/%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2212%22%20r%3D%227%22%20fill%3D%22%23FF6B9D%22/%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2248%22%20r%3D%227%22%20fill%3D%22%23FF6B9D%22/%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2230%22%20r%3D%227%22%20fill%3D%22%23FF6B9D%22/%3E%3Ccircle%20cx%3D%2248%22%20cy%3D%2230%22%20r%3D%227%22%20fill%3D%22%23FF6B9D%22/%3E%3Ccircle%20cx%3D%2218%22%20cy%3D%2218%22%20r%3D%226%22%20fill%3D%22%23FF9800%22/%3E%3Ccircle%20cx%3D%2242%22%20cy%3D%2218%22%20r%3D%226%22%20fill%3D%22%23FF9800%22/%3E%3Ccircle%20cx%3D%2218%22%20cy%3D%2242%22%20r%3D%226%22%20fill%3D%22%23FF9800%22/%3E%3Ccircle%20cx%3D%2242%22%20cy%3D%2242%22%20r%3D%226%22%20fill%3D%22%23FF9800%22/%3E%3C/svg%3E", "9": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Cellipse%20cx%3D%2218%22%20cy%3D%2226%22%20rx%3D%2210%22%20ry%3D%227%22%20fill%3D%22%23CE93D8%22%20transform%3D%22rotate%28-30%2018%2026%29%22/%3E%3Cellipse%20cx%3D%2242%22%20cy%3D%2226%22%20rx%3D%2210%22%20ry%3D%227%22%20fill%3D%22%23F48FB1%22%20transform%3D%22rotate%2830%2042%2026%29%22/%3E%3Cellipse%20cx%3D%2218%22%20cy%3D%2238%22%20rx%3D%229%22%20ry%3D%226%22%20fill%3D%22%2380DEEA%22%20transform%3D%22rotate%2820%2018%2038%29%22/%3E%3Cellipse%20cx%3D%2242%22%20cy%3D%2238%22%20rx%3D%229%22%20ry%3D%226%22%20fill%3D%22%23A5D6A7%22%20transform%3D%22rotate%28-20%2042%2038%29%22/%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%225%22%20fill%3D%22%23FF6B9D%22/%3E%3C/svg%3E", "10": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Cpath%20d%3D%22M5%2042%20Q10%2020%2030%2020%20Q50%2020%2055%2042Z%22%20fill%3D%22%2390CAF9%22%20opacity%3D%220.5%22/%3E%3Cpath%20d%3D%22M10%2040%20Q16%2022%2030%2022%20Q44%2022%2050%2040Z%22%20fill%3D%22%2364B5F6%22%20opacity%3D%220.6%22/%3E%3Cpath%20d%3D%22M15%2038%20Q20%2025%2030%2025%20Q40%2025%2045%2038Z%22%20fill%3D%22%23FFD700%22%20opacity%3D%220.8%22/%3E%3Cpath%20d%3D%22M20%2036%20Q24%2028%2030%2028%20Q36%2028%2040%2036Z%22%20fill%3D%22%23FF9800%22/%3E%3C/svg%3E", "11": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Cellipse%20cx%3D%2230%22%20cy%3D%2236%22%20rx%3D%2220%22%20ry%3D%2214%22%20fill%3D%22%23BDBDBD%22/%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2222%22%20r%3D%2213%22%20fill%3D%22%23BDBDBD%22/%3E%3Cpath%20d%3D%22M42%2026%20Q55%2020%2057%2030%20Q55%2036%2045%2034Z%22%20fill%3D%22%23BDBDBD%22/%3E%3Ccircle%20cx%3D%2224%22%20cy%3D%2220%22%20r%3D%222%22%20fill%3D%22%23333%22/%3E%3Ccircle%20cx%3D%2236%22%20cy%3D%2220%22%20r%3D%222%22%20fill%3D%22%23333%22/%3E%3Cpath%20d%3D%22M22%2028%20Q30%2034%2038%2028%22%20stroke%3D%22%23555%22%20stroke-width%3D%222%22%20fill%3D%22none%22/%3E%3C/svg%3E", "12": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Cellipse%20cx%3D%2230%22%20cy%3D%2236%22%20rx%3D%2212%22%20ry%3D%2210%22%20fill%3D%22%23FF7043%22/%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2224%22%20r%3D%229%22%20fill%3D%22%23FF7043%22/%3E%3Cpath%20d%3D%22M22%2016%20Q20%206%2026%208Z%22%20fill%3D%22%23FF7043%22/%3E%3Cpath%20d%3D%22M38%2016%20Q40%206%2034%208Z%22%20fill%3D%22%23FF7043%22/%3E%3Ccircle%20cx%3D%2226%22%20cy%3D%2222%22%20r%3D%222%22%20fill%3D%22%23333%22/%3E%3Ccircle%20cx%3D%2234%22%20cy%3D%2222%22%20r%3D%222%22%20fill%3D%22%23333%22/%3E%3Cpath%20d%3D%22M18%2032%20Q15%2028%2012%2030%22%20stroke%3D%22%23FF7043%22%20stroke-width%3D%222.5%22%20fill%3D%22none%22/%3E%3Cpath%20d%3D%22M42%2032%20Q45%2028%2048%2030%22%20stroke%3D%22%23FF7043%22%20stroke-width%3D%222.5%22%20fill%3D%22none%22/%3E%3C/svg%3E", "13": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%2222%22%20fill%3D%22%2381D4FA%22/%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2224%22%20r%3D%229%22%20fill%3D%22white%22%20opacity%3D%220.9%22/%3E%3Ccircle%20cx%3D%2236%22%20cy%3D%2220%22%20r%3D%2211%22%20fill%3D%22white%22%20opacity%3D%220.9%22/%3E%3Ccircle%20cx%3D%2246%22%20cy%3D%2228%22%20r%3D%228%22%20fill%3D%22white%22%20opacity%3D%220.9%22/%3E%3C/svg%3E", "14": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2220%22%20r%3D%2214%22%20fill%3D%22%23FFF9C4%22/%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2220%22%20r%3D%2210%22%20fill%3D%22%23FFD700%22/%3E%3Cline%20x1%3D%2230%22%20y1%3D%222%22%20x2%3D%2230%22%20y2%3D%226%22%20stroke%3D%22%23FFD700%22%20stroke-width%3D%223%22/%3E%3Cline%20x1%3D%2230%22%20y1%3D%2234%22%20x2%3D%2230%22%20y2%3D%2238%22%20stroke%3D%22%23FFD700%22%20stroke-width%3D%223%22/%3E%3Cline%20x1%3D%2212%22%20y1%3D%2220%22%20x2%3D%2216%22%20y2%3D%2220%22%20stroke%3D%22%23FFD700%22%20stroke-width%3D%223%22/%3E%3Cline%20x1%3D%2244%22%20y1%3D%2220%22%20x2%3D%2248%22%20y2%3D%2220%22%20stroke%3D%22%23FFD700%22%20stroke-width%3D%223%22/%3E%3Crect%20x%3D%2222%22%20y%3D%2234%22%20width%3D%2216%22%20height%3D%2220%22%20rx%3D%223%22%20fill%3D%22%23F44336%22/%3E%3Crect%20x%3D%2226%22%20y%3D%2244%22%20width%3D%228%22%20height%3D%2210%22%20rx%3D%222%22%20fill%3D%22%23FFCCBC%22/%3E%3C/svg%3E", "15": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Cpath%20d%3D%22M30%208%20L34%2020%20L48%2020%20L37%2028%20L41%2042%20L30%2033%20L19%2042%20L23%2028%20L12%2020%20L26%2020Z%22%20fill%3D%22%23FFD700%22%20stroke%3D%22%23FFC107%22%20stroke-width%3D%221.5%22/%3E%3C/svg%3E", "16": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Crect%20x%3D%2210%22%20y%3D%2215%22%20width%3D%2240%22%20height%3D%2230%22%20rx%3D%225%22%20fill%3D%22%2342A5F5%22/%3E%3Crect%20x%3D%2218%22%20y%3D%2222%22%20width%3D%2210%22%20height%3D%2210%22%20rx%3D%222%22%20fill%3D%22%2390CAF9%22/%3E%3Crect%20x%3D%2232%22%20y%3D%2222%22%20width%3D%2210%22%20height%3D%2210%22%20rx%3D%222%22%20fill%3D%22%2390CAF9%22/%3E%3Crect%20x%3D%2223%22%20y%3D%2230%22%20width%3D%2214%22%20height%3D%2215%22%20rx%3D%222%22%20fill%3D%22%23FFCCBC%22/%3E%3Crect%20x%3D%2210%22%20y%3D%2214%22%20width%3D%2240%22%20height%3D%225%22%20rx%3D%223%22%20fill%3D%22%23E53935%22/%3E%3C/svg%3E", "17": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Cpath%20d%3D%22M10%2038%20Q14%2022%2030%2022%20Q46%2022%2050%2038Z%22%20fill%3D%22%2390CAF9%22%20opacity%3D%220.6%22/%3E%3Cpath%20d%3D%22M13%2036%20Q18%2024%2030%2024%20Q42%2024%2047%2036Z%22%20fill%3D%22%2364B5F6%22%20opacity%3D%220.7%22/%3E%3Cpath%20d%3D%22M17%2034%20Q22%2026%2030%2026%20Q38%2026%2043%2034Z%22%20fill%3D%22%23FFD700%22%20opacity%3D%220.9%22/%3E%3Cpath%20d%3D%22M21%2033%20Q25%2028%2030%2028%20Q35%2028%2039%2033Z%22%20fill%3D%22%23FF9800%22/%3E%3C/svg%3E", "18": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2228%22%20r%3D%2216%22%20fill%3D%22%23FFF176%22/%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2228%22%20r%3D%2212%22%20fill%3D%22%23FFD700%22/%3E%3Cline%20x1%3D%2230%22%20y1%3D%228%22%20x2%3D%2230%22%20y2%3D%2213%22%20stroke%3D%22%23FFD700%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2230%22%20y1%3D%2243%22%20x2%3D%2230%22%20y2%3D%2248%22%20stroke%3D%22%23FFD700%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2210%22%20y1%3D%2228%22%20x2%3D%2215%22%20y2%3D%2228%22%20stroke%3D%22%23FFD700%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2245%22%20y1%3D%2228%22%20x2%3D%2250%22%20y2%3D%2228%22%20stroke%3D%22%23FFD700%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%2225%22%20cy%3D%2224%22%20r%3D%222.5%22%20fill%3D%22%23333%22/%3E%3Ccircle%20cx%3D%2235%22%20cy%3D%2224%22%20r%3D%222.5%22%20fill%3D%22%23333%22/%3E%3Cpath%20d%3D%22M22%2033%20Q30%2040%2038%2033%22%20stroke%3D%22%23333%22%20stroke-width%3D%222.5%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E", "19": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Cpath%20d%3D%22M30%2050%20C12%2038%206%2022%2016%2014%20C23%208%2030%2016%2030%2016%20C30%2016%2037%208%2044%2014%20C54%2022%2048%2038%2030%2050Z%22%20fill%3D%22%23FF6B9D%22/%3E%3Cpath%20d%3D%22M30%2044%20C16%2034%2012%2022%2018%2016%20C23%2011%2030%2018%2030%2018%20C30%2018%2037%2011%2042%2016%20C48%2022%2044%2034%2030%2044Z%22%20fill%3D%22%23FF8FB1%22/%3E%3C/svg%3E", "20": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2060%2060%22%3E%3Cpolygon%20points%3D%2230%2C5%2034%2C19%2050%2C19%2037%2C28%2042%2C44%2030%2C35%2018%2C44%2023%2C28%2010%2C19%2026%2C19%22%20fill%3D%22%23FFD700%22%20stroke%3D%22%23FFC107%22%20stroke-width%3D%221.5%22/%3E%3Cpolygon%20points%3D%2230%2C12%2033%2C21%2042%2C21%2035%2C27%2038%2C37%2030%2C31%2022%2C37%2025%2C27%2018%2C21%2027%2C21%22%20fill%3D%22%23FFF9C4%22/%3E%3C/svg%3E"};
+let maxNum=5,order=[],idx=0;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function buildOrder(){order=shuffle([...Array(maxNum).keys()].map(i=>i+1));idx=0;buildProgress();}
+function buildProgress(){const p=document.getElementById('progress');p.innerHTML='';for(let i=0;i<maxNum;i++){const d=document.createElement('div');d.className='pdot'+(i<idx?' seen':'')+(i===idx?' current':'');p.appendChild(d);}}
+function makeDots(n){const ic=ICONS[n]||ICONS[1];let s='';for(let i=0;i<n;i++)s+='<img class="dot-icon" src="'+ic+'" alt="dot">';return s;}
+function showCard(n,animate){const card=document.getElementById('card');if(animate){card.classList.remove('flip');void card.offsetWidth;card.classList.add('flip');}document.getElementById('numDisplay').textContent=n;document.getElementById('wordEn').textContent=wordsEn[n];document.getElementById('wordHi').textContent=wordsHi[n];document.getElementById('dotsArea').innerHTML=makeDots(n);document.getElementById('countLabel').textContent=n+' - ungli se gino!';buildProgress();}
+function newCard(){if(idx>=order.length)buildOrder();showCard(order[idx],true);idx++;buildProgress();}
+function prevCard(){if(idx>1){idx-=2;showCard(order[idx],true);idx++;buildProgress();}}
+function setRange(val,btn){document.querySelectorAll('.qbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');maxNum=val;document.getElementById('rangeVal').textContent=val;document.getElementById('rangeSlider').value=val;buildOrder();newCard();}
+function sliderChange(val){maxNum=parseInt(val);document.getElementById('rangeVal').textContent=val;document.querySelectorAll('.qbtn').forEach(b=>b.classList.remove('active'));buildOrder();newCard();}
+buildOrder();newCard();
+</script>
+</body>
+</html>
