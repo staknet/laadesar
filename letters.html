@@ -100,8 +100,17 @@
       background: #FFF3E0;
       border-radius: 50px;
       padding: 8px 24px;
-      text-align: center
+      text-align: center;
+      /* NEW: Disable text selection on mobile/desktop */
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      /* Optional: Cursor pointer for better UX */
+      cursor: pointer;
     }
+
 
     .sound-lbl {
       font-size: 0.7rem;
@@ -284,9 +293,16 @@
     document.getElementById('btnNext').onclick = function () { show((cur + 1) % DATA.length); };
 
     // NEW: Click handler for sound box
-    document.querySelector('.sound-box').addEventListener('click', function () {
-      audio.play().catch(function (e) { console.log('Audio play failed:', e); });  // Handles autoplay policies
-    });
+    // NEW: Enhanced click handler for sound box (works on mobile)
+    document.querySelector('.sound-box').addEventListener('pointerdown', function (e) {
+      e.preventDefault();  // Block text selection
+      e.stopPropagation();
+      if (audio.src) {  // Ensure src is set
+        audio.currentTime = 0;  // Restart from beginning
+        audio.play().catch(function (e) { console.log('Play failed:', e); });
+      }
+    }, { passive: false });  // Allow preventDefault on mobile
+
 
     show(0);  // Initial load</script>
 </body>
