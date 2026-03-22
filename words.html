@@ -81,7 +81,18 @@
       font-size: 3.5rem;
       font-weight: 900;
       color: #fff;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25)
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      cursor: pointer;
+    }
+
+    .lb:active {
+      transform: scale(0.95);
+      /* Visual feedback */
     }
 
     .word {
@@ -238,19 +249,20 @@
         var box = document.createElement('div');
         box.className = 'lb';
         box.style.background = COLS[i % COLS.length];
-        var letter = d.word[i].toUpperCase();
-        box.textContent = letter;
-        // NEW: Play sound on click (4 lines)
-        box.onclick = (function (let) {
+        box.textContent = d.word[i].toUpperCase();
+        // FIXED: Mobile click + no text select
+        box.addEventListener('pointerdown', function (let) {
           return function (e) {
+            e.preventDefault();
             e.stopPropagation();
             var freshAudio = new Audio('sounds/' + let.toLowerCase() + '.mp3');
             freshAudio.volume = 1.0;
             freshAudio.play().catch(err => console.log('Sound failed:', err));
           };
-        })(d.word[i]);
+        }(d.word[i]), { passive: false });
         letDiv.appendChild(box);
       }
+
 
 
       document.getElementById('word').style.display = 'none';
