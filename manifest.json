@@ -2,7 +2,7 @@
   "name": "Laadesar",
   "short_name": "Laadesar",
   "description": "Learn Numbers, Letters, and Words",
-  "start_url": "/",
+  "start_url": "/laadesar/",
   "display": "standalone",
   "background_color": "#FFF9F0",
   "theme_color": "#FF6F00",
