@@ -263,7 +263,7 @@
       var sv = document.getElementById('soundVal');
       sv.textContent = d.sound;
       sv.style.color = d.col;
-      audio.src = d.l.toLowerCase() + '.mp3';  // e.g., 'a.mp3'
+      audio.src = 'sounds/' + d.l.toLowerCase() + '.mp3';  // NEW: sounds/ folder
 
       // Picture, words (existing)
       document.getElementById('pic').src = d.img;
