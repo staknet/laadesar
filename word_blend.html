@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Word Blend</title>
+<style>
+body{margin:0;padding:20px;background:#FFF8E1;text-align:center;font-family:Arial,sans-serif}
+h1{color:#E65100;font-size:2rem;margin-bottom:6px}
+p{color:#888;margin-bottom:20px;font-size:1rem}
+
+.levels{display:flex;gap:12px;justify-content:center;margin-bottom:24px}
+.lbtn{font-size:1.1rem;font-weight:700;border:none;border-radius:40px;padding:14px 28px;cursor:pointer;background:#ddd;box-shadow:0 3px 8px rgba(0,0,0,0.15)}
+.lbtn.on{background:#FF9800;color:#fff}
+
+.card{background:#fff;border-radius:28px;padding:36px 24px;margin-bottom:24px;box-shadow:0 8px 24px rgba(0,0,0,0.12);border:5px solid #FF9800;min-height:480px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+
+.letters{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+.lb{width:90px;height:100px;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;font-weight:900;color:#fff;box-shadow:0 8px 20px rgba(0,0,0,0.25)}
+
+.word{font-size:5rem;font-weight:900;padding:20px 40px;border-radius:30px;background:#FF9800;color:#fff;box-shadow:0 8px 24px rgba(255,152,0,0.5);display:none}
+
+.picture{width:180px;height:180px;border-radius:24px;object-fit:cover;box-shadow:0 8px 24px rgba(0,0,0,0.2);display:none}
+.nopicture{width:180px;height:180px;border-radius:24px;background:#f5f5f5;display:none;align-items:center;justify-content:center;font-size:4rem}
+
+.hindi{font-size:1.6rem;color:#666;font-weight:700;display:none}
+
+.btn{font-size:1.4rem;font-weight:900;border:none;border-radius:40px;padding:22px 0;width:100%;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,0.2);color:#fff}
+.blend{background:#F44336}
+.next-btn{background:#4CAF50;display:none}
+
+.nav{display:flex;gap:16px}
+.nbtn{font-size:1.2rem;font-weight:700;border:none;border-radius:35px;padding:18px 0;flex:1;cursor:pointer;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,0.15)}
+.pb{background:#9575CD}
+.nb{background:#FF9800}
+</style>
+</head>
+<body>
+
+<h1>Word Blend</h1>
+<p>Sounds milao — shabd banao!</p>
+
+<div class="levels">
+  <button class="lbtn on" id="btn2">3 Letters</button>
+  <button class="lbtn" id="btn4">4 Letters</button>
+</div>
+
+<div class="card" id="card">
+  <div class="letters" id="letters"></div>
+  <img class="picture" id="pic" src="" alt="">
+  <div class="nopicture" id="nopic">🖼️</div>
+  <div class="word" id="word"></div>
+  <div class="hindi" id="hindi"></div>
+  <button class="btn blend" id="blendBtn">Blend! →</button>
+  <button class="btn next-btn" id="nextBtn">Next Word ✓</button>
+</div>
+
+<div class="nav">
+  <button class="nbtn pb" id="prevBtn">← Prev</button>
+  <button class="nbtn nb" id="nextNavBtn">Next →</button>
+</div>
+
+<script>
+var W3 = [
+  {word:"cat",hindi:"बिल्ली",img:"cat.jpg"},
+  {word:"dog",hindi:"कुत्ता",img:"dog.jpg"},
+  {word:"sun",hindi:"सूरज",img:"sun.jpg"},
+  {word:"bus",hindi:"बस",img:"bus.jpg"},
+  {word:"cup",hindi:"कप",img:"cup.jpg"},
+  {word:"pen",hindi:"कलम",img:"pen.jpg"},
+  {word:"hat",hindi:"टोपी",img:"hat.jpg"},
+  {word:"rat",hindi:"चूहा",img:"rat.jpg"},
+  {word:"pan",hindi:"कढ़ाई",img:"pan.jpg"},
+  {word:"fan",hindi:"पंखा",img:"fan.jpg"},
+  {word:"bag",hindi:"थैला",img:"bag.jpg"},
+  {word:"map",hindi:"नक्शा",img:"map.jpg"},
+  {word:"hen",hindi:"मुर्गी",img:"hen.jpg"},
+  {word:"pot",hindi:"बर्तन",img:"pot.jpg"},
+  {word:"web",hindi:"जाल",img:"web.jpg"}
+];
+var W4 = [
+  {word:"frog",hindi:"मेंढक",img:"frog.jpg"},
+  {word:"fish",hindi:"मछली",img:"fish.jpg"},
+  {word:"duck",hindi:"बत्तख",img:"duck.jpg"},
+  {word:"cake",hindi:"केक",img:"cake.jpg"},
+  {word:"leaf",hindi:"पत्ता",img:"leaf.jpg"}
+];
+
+var COLS = ["#E53935","#8E24AA","#1E88E5","#00897B","#F57C00"];
+var level = 3, cur = 0;
+
+function getList(){ return level===3 ? W3 : W4; }
+
+function showWord(){
+  var list = getList();
+  var d = list[cur];
+
+  var letDiv = document.getElementById('letters');
+  letDiv.innerHTML = '';
+  for(var i=0;i<d.word.length;i++){
+    var box = document.createElement('div');
+    box.className = 'lb';
+    box.style.background = COLS[i % COLS.length];
+    box.textContent = d.word[i].toUpperCase();
+    letDiv.appendChild(box);
+  }
+
+  document.getElementById('word').style.display = 'none';
+  document.getElementById('hindi').style.display = 'none';
+  document.getElementById('blendBtn').style.display = 'block';
+  document.getElementById('nextBtn').style.display = 'none';
+
+  var img = document.getElementById('pic');
+  var nopic = document.getElementById('nopic');
+  img.setAttribute('src','images/' + d.img);
+  img.style.cssText = 'display:none !important;width:180px;height:180px;border-radius:24px;object-fit:cover;box-shadow:0 8px 24px rgba(0,0,0,0.2)';
+  nopic.style.cssText = 'display:none !important;width:180px;height:180px;border-radius:24px;background:#f5f5f5;align-items:center;justify-content:center;font-size:4rem';
+}
+
+function blend(){
+  var list = getList();
+  var d = list[cur];
+  document.getElementById('word').textContent = d.word.toUpperCase();
+  document.getElementById('word').style.display = 'block';
+  document.getElementById('hindi').textContent = d.hindi;
+  document.getElementById('hindi').style.display = 'block';
+  document.getElementById('blendBtn').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'block';
+  var img = document.getElementById('pic');
+  var nopic = document.getElementById('nopic');
+  img.style.cssText = 'display:block;width:180px;height:180px;border-radius:24px;object-fit:cover;box-shadow:0 8px 24px rgba(0,0,0,0.2)';
+  if(!img.complete || !img.naturalWidth){
+    img.style.cssText = 'display:none';
+    nopic.style.cssText = 'display:flex;width:180px;height:180px;border-radius:24px;background:#f5f5f5;align-items:center;justify-content:center;font-size:4rem';
+  }
+}
+
+function nextWord(){ cur = (cur+1) % getList().length; showWord(); }
+function goPrev(){  cur = (cur-1+getList().length) % getList().length; showWord(); }
+function goNext(){  cur = (cur+1) % getList().length; showWord(); }
+
+document.getElementById('blendBtn').addEventListener('click', blend);
+document.getElementById('nextBtn').addEventListener('click', nextWord);
+document.getElementById('prevBtn').addEventListener('click', goPrev);
+document.getElementById('nextNavBtn').addEventListener('click', goNext);
+
+document.getElementById('btn2').addEventListener('click', function(){
+  level=3;
+  document.getElementById('btn2').classList.add('on');
+  document.getElementById('btn4').classList.remove('on');
+  cur=0; showWord();
+});
+document.getElementById('btn4').addEventListener('click', function(){
+  level=4;
+  document.getElementById('btn4').classList.add('on');
+  document.getElementById('btn2').classList.remove('on');
+  cur=0; showWord();
+});
+
+showWord();
+</script>
+</body>
+</html>
