@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>ABC Phonics</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:linear-gradient(135deg,#FFF8F0,#FFE0B2);display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;padding:14px}
+.app{width:100%;max-width:400px;text-align:center}
+h1{font-size:1.6rem;color:#BF360C;margin-bottom:2px;font-weight:800}
+.sub{font-size:0.85rem;color:#bbb;margin-bottom:12px}
+.alpha-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;margin-bottom:14px;background:#fff;border-radius:14px;padding:10px;box-shadow:0 2px 10px rgba(0,0,0,0.07)}
+.ag{font-size:1rem;font-weight:800;border:none;border-radius:8px;padding:7px 0;cursor:pointer;background:#f0f0f0;color:#555;transition:all 0.15s}
+.ag.on{color:#fff}
+.card{background:#fff;border-radius:24px;box-shadow:0 8px 28px rgba(0,0,0,0.12);padding:20px 16px 16px;margin-bottom:14px;border:4px solid #E53935;min-height:380px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.big-letter{font-size:7rem;font-weight:900;line-height:1}
+.cases{font-size:1.2rem;color:#aaa;font-weight:700;letter-spacing:6px}
+.sound-box{background:#FFF3E0;border-radius:50px;padding:8px 24px;text-align:center}
+.sound-lbl{font-size:0.7rem;color:#aaa;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.sound-val{font-size:1.8rem;font-weight:900}
+.pic-row{display:flex;align-items:center;gap:14px;width:100%}
+.pic-box{width:90px;height:90px;border-radius:16px;background:#FFF8F0;padding:6px;box-shadow:0 2px 8px rgba(0,0,0,0.09);flex-shrink:0}
+.pic-box img{width:78px;height:78px;display:block}
+.winfo{text-align:left}
+.weng{font-size:1.7rem;font-weight:900;line-height:1.1}
+.whin{font-size:1rem;color:#888;font-weight:700;margin-top:3px}
+.sayit{background:#E8F5E9;border-radius:12px;padding:9px 14px;font-size:0.88rem;color:#2E7D32;font-weight:700;width:100%;text-align:center}
+.nav{display:flex;gap:10px;width:100%}
+.nbtn{font-size:1.1rem;font-weight:800;border:none;border-radius:50px;padding:14px 0;flex:1;cursor:pointer;color:#fff;box-shadow:0 3px 10px rgba(0,0,0,0.12);transition:transform 0.15s}
+.nbtn:active{transform:scale(0.95)}
+.prev{background:linear-gradient(135deg,#a18cd1,#fbc2eb)}
+.next{background:linear-gradient(135deg,#F7971E,#FFD200)}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>ABC Phonics</h1>
+  <p class="sub">Learn the SOUND of each letter</p>
+  <div class="alpha-grid" id="grid"></div>
+  <div class="card" id="card">
+    <div class="big-letter" id="bigL"></div>
+    <div class="cases" id="cases"></div>
+    <div class="sound-box">
+      <div class="sound-lbl">This letter says...</div>
+      <div class="sound-val" id="soundVal"></div>
+    </div>
+    <div class="pic-row">
+      <div class="pic-box"><img id="pic" src="" alt=""></div>
+      <div class="winfo">
+        <div class="weng" id="weng"></div>
+        <div class="whin" id="whin"></div>
+      </div>
+    </div>
+    <div class="sayit" id="sayit"></div>
+  </div>
+  <div class="nav">
+    <button class="nbtn prev" id="btnPrev">&#8592; Back</button>
+    <button class="nbtn next" id="btnNext">Next &#8594;</button>
+  </div>
+</div>
+<script>
+var DATA=[{"l": "A", "sound": "aaa", "word": "Apple", "hindi": "सेब", "col": "#E53935", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjU4IiByPSIzMiIgZmlsbD0iI0U1MzkzNSIvPjxjaXJjbGUgY3g9IjM2IiBjeT0iNTYiIHI9IjI4IiBmaWxsPSIjRUY1MzUwIi8+PGxpbmUgeDE9IjUwIiB5MT0iMjYiIHgyPSI1MCIgeTI9IjE0IiBzdHJva2U9IiM1RDQwMzciIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTUwIDE0IFE2MiA4IDY2IDE2IiBzdHJva2U9IiM0M0EwNDciIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGVsbGlwc2UgY3g9IjQwIiBjeT0iNTIiIHJ4PSI2IiByeT0iMTAiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4yKSIgdHJhbnNmb3JtPSJyb3RhdGUoLTIwIDQwIDUyKSIvPjwvc3ZnPg=="}, {"l": "B", "sound": "buh", "word": "Ball", "hindi": "गेंद", "col": "#E91E63", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIzNiIgZmlsbD0iI0U5MUU2MyIvPjxwYXRoIGQ9Ik0yMCAzOCBRNTAgNTUgODAgMzgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0yMCA2MiBRNTAgNDUgODAgNjIiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik01MCAxNCBRMzUgNTAgNTAgODYiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik01MCAxNCBRNjUgNTAgNTAgODYiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIvPjwvc3ZnPg=="}, {"l": "C", "sound": "kuh", "word": "Cat", "hindi": "बिल्ली", "col": "#8E24AA", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZWxsaXBzZSBjeD0iNTAiIGN5PSI2NCIgcng9IjI4IiByeT0iMjIiIGZpbGw9IiNGRjhGMDAiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjQyIiByPSIyMCIgZmlsbD0iI0ZGOEYwMCIvPjxwb2x5Z29uIHBvaW50cz0iMzIsMjggMjYsMTAgNDAsMjQiIGZpbGw9IiNGRjhGMDAiLz48cG9seWdvbiBwb2ludHM9IjY4LDI4IDc0LDEwIDYwLDI0IiBmaWxsPSIjRkY4RjAwIi8+PGNpcmNsZSBjeD0iNDIiIGN5PSI0MCIgcj0iMyIgZmlsbD0iIzMzMyIvPjxjaXJjbGUgY3g9IjU4IiBjeT0iNDAiIHI9IjMiIGZpbGw9IiMzMzMiLz48ZWxsaXBzZSBjeD0iNTAiIGN5PSI0NyIgcng9IjUiIHJ5PSIzIiBmaWxsPSIjRkY3MDQzIi8+PHBhdGggZD0iTTMwIDU2IFEyMiA1MiAxNiA1NiIgc3Ryb2tlPSIjRkY4RjAwIiBzdHJva2Utd2lkdGg9IjIuNSIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik03MCA1NiBRNzggNTIgODQgNTYiIHN0cm9rZT0iI0ZGOEYwMCIgc3Ryb2tlLXdpZHRoPSIyLjUiIGZpbGw9Im5vbmUiLz48L3N2Zz4="}, {"l": "D", "sound": "duh", "word": "Dog", "hindi": "कुत्ता", "col": "#3949AB", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZWxsaXBzZSBjeD0iNTAiIGN5PSI2MiIgcng9IjI4IiByeT0iMjAiIGZpbGw9IiM4RDZFNjMiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjQwIiByPSIyMCIgZmlsbD0iIzhENkU2MyIvPjxlbGxpcHNlIGN4PSIzMiIgY3k9IjI4IiByeD0iOCIgcnk9IjE0IiBmaWxsPSIjNzk1NTQ4IiB0cmFuc2Zvcm09InJvdGF0ZSgtMTUgMzIgMjgpIi8+PGVsbGlwc2UgY3g9IjY4IiBjeT0iMjgiIHJ4PSI4IiByeT0iMTQiIGZpbGw9IiM3OTU1NDgiIHRyYW5zZm9ybT0icm90YXRlKDE1IDY4IDI4KSIvPjxjaXJjbGUgY3g9IjQyIiBjeT0iMzgiIHI9IjMiIGZpbGw9IiMzMzMiLz48Y2lyY2xlIGN4PSI1OCIgY3k9IjM4IiByPSIzIiBmaWxsPSIjMzMzIi8+PGVsbGlwc2UgY3g9IjUwIiBjeT0iNDgiIHJ4PSI4IiByeT0iNSIgZmlsbD0iI0ExODg3RiIvPjxwYXRoIGQ9Ik03NiA1OCBRODggNTIgOTAgNjIgUTg4IDcwIDc4IDY2WiIgZmlsbD0iIzhENkU2MyIvPjwvc3ZnPg=="}, {"l": "E", "sound": "eh", "word": "Egg", "hindi": "अंडा", "col": "#1E88E5", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZWxsaXBzZSBjeD0iNTAiIGN5PSI1NCIgcng9IjI4IiByeT0iMzQiIGZpbGw9IiNGRkY5QzQiLz48ZWxsaXBzZSBjeD0iNTAiIGN5PSI1NCIgcng9IjI0IiByeT0iMzAiIGZpbGw9IiNGRkZERTciLz48Y2lyY2xlIGN4PSI0MiIgY3k9IjUwIiByPSIxMCIgZmlsbD0iI0ZGOEYwMCIgb3BhY2l0eT0iMC44Ii8+PC9zdmc+"}, {"l": "F", "sound": "fuh", "word": "Fish", "hindi": "मछली", "col": "#00ACC1", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZWxsaXBzZSBjeD0iNDYiIGN5PSI1MCIgcng9IjI4IiByeT0iMTgiIGZpbGw9IiMyOUI2RjYiLz48cG9seWdvbiBwb2ludHM9Ijc4LDUwIDkyLDM2IDkyLDY0IiBmaWxsPSIjMDI4OEQxIi8+PGNpcmNsZSBjeD0iMzQiIGN5PSI0NCIgcj0iNCIgZmlsbD0iIzMzMyIvPjxjaXJjbGUgY3g9IjMzIiBjeT0iNDMiIHI9IjEuNSIgZmlsbD0id2hpdGUiLz48ZWxsaXBzZSBjeD0iMzgiIGN5PSI1MCIgcng9IjEyIiByeT0iOCIgZmlsbD0iIzRGQzNGNyIgb3BhY2l0eT0iMC41Ii8+PC9zdmc+"}, {"l": "G", "sound": "guh", "word": "Goat", "hindi": "बकरी", "col": "#00897B", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZWxsaXBzZSBjeD0iNTIiIGN5PSI2MiIgcng9IjI2IiByeT0iMTgiIGZpbGw9IiNFQ0VGRjEiLz48Y2lyY2xlIGN4PSIzNCIgY3k9IjQ2IiByPSIxNiIgZmlsbD0iI0VDRUZGMSIvPjxwYXRoIGQ9Ik0yNiAzMiBRMjIgMTggMjggMTYgUTMwIDI2IDM0IDI4WiIgZmlsbD0iI0VDRUZGMSIvPjxwYXRoIGQ9Ik0zNiAzMCBRMzggMTYgNDQgMTYgUTQyIDI2IDM4IDMwWiIgZmlsbD0iI0VDRUZGMSIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iNDQiIHI9IjIuNSIgZmlsbD0iIzMzMyIvPjxlbGxpcHNlIGN4PSIzNCIgY3k9IjUyIiByeD0iNiIgcnk9IjQiIGZpbGw9IiNCREJEQkQiLz48bGluZSB4MT0iMzgiIHkxPSI4MCIgeDI9IjM2IiB5Mj0iOTYiIHN0cm9rZT0iI0JEQkRCRCIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48bGluZSB4MT0iNTIiIHkxPSI4MCIgeDI9IjUwIiB5Mj0iOTYiIHN0cm9rZT0iI0JEQkRCRCIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4="}, {"l": "H", "sound": "huh", "word": "Hat", "hindi": "टोपी", "col": "#43A047", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZWxsaXBzZSBjeD0iNTAiIGN5PSI2OCIgcng9IjM4IiByeT0iMTAiIGZpbGw9IiMxNTY1QzAiLz48cmVjdCB4PSIzMCIgeT0iMzAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcng9IjYiIGZpbGw9IiMxOTc2RDIiLz48ZWxsaXBzZSBjeD0iNTAiIGN5PSIzMCIgcng9IjIwIiByeT0iOCIgZmlsbD0iIzE1NjVDMCIvPjxyZWN0IHg9IjMwIiB5PSI1MiIgd2lkdGg9IjQwIiBoZWlnaHQ9IjgiIGZpbGw9IiNGRjhGMDAiLz48L3N2Zz4="}, {"l": "I", "sound": "ih", "word": "Ink", "hindi": "स्याही", "col": "#7CB342", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIzNCIgeT0iMjgiIHdpZHRoPSIzMiIgaGVpZ2h0PSI1MCIgcng9IjYiIGZpbGw9IiMzRjUxQjUiLz48cmVjdCB4PSIzNCIgeT0iMjgiIHdpZHRoPSIzMiIgaGVpZ2h0PSIxNCIgcng9IjYiIGZpbGw9IiMyODM1OTMiLz48cmVjdCB4PSI0MiIgeT0iMTYiIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNCIgcng9IjQiIGZpbGw9IiM1QzZCQzAiLz48cmVjdCB4PSI0MCIgeT0iNDQiIHdpZHRoPSIyMCIgaGVpZ2h0PSI0IiByeD0iMiIgZmlsbD0iIzc5ODZDQiIvPjxyZWN0IHg9IjQwIiB5PSI1MiIgd2lkdGg9IjIwIiBoZWlnaHQ9IjQiIHJ4PSIyIiBmaWxsPSIjNzk4NkNCIi8+PC9zdmc+"}, {"l": "J", "sound": "juh", "word": "Jar", "hindi": "मर्तबान", "col": "#F9A825", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIzNCIgeT0iMjIiIHdpZHRoPSIzMiIgaGVpZ2h0PSI4IiByeD0iMyIgZmlsbD0iIzkwQTRBRSIvPjxwYXRoIGQ9Ik0yOCAzMCBRMjQgNDQgMjQgNjAgUTI0IDc4IDUwIDc4IFE3NiA3OCA3NiA2MCBRNzYgNDQgNzIgMzBaIiBmaWxsPSIjRTNGMkZEIiBzdHJva2U9IiM5MEE0QUUiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iNTIiIHI9IjYiIGZpbGw9IiNGRjhBNjUiLz48Y2lyY2xlIGN4PSI1OCIgY3k9IjQ2IiByPSI1IiBmaWxsPSIjQTVENkE3Ii8+PGNpcmNsZSBjeD0iNTIiIGN5PSI2MiIgcj0iNSIgZmlsbD0iI0ZGOEE2NSIvPjwvc3ZnPg=="}, {"l": "K", "sound": "kuh", "word": "Kite", "hindi": "पतंग", "col": "#FB8C00", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cG9seWdvbiBwb2ludHM9IjUwLDEwIDgwLDUwIDUwLDc2IDIwLDUwIiBmaWxsPSIjRTkxRTYzIi8+PHBvbHlnb24gcG9pbnRzPSI1MCwxMCA4MCw1MCA1MCw0MyIgZmlsbD0iI0ZGODBBQiIvPjxwb2x5Z29uIHBvaW50cz0iNTAsMTAgMjAsNTAgNTAsNDMiIGZpbGw9IiNDMjE4NUIiLz48bGluZSB4MT0iNTAiIHkxPSI3NiIgeDI9IjUwIiB5Mj0iOTUiIHN0cm9rZT0iIzc5NTU0OCIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+"}, {"l": "L", "sound": "luh", "word": "Lion", "hindi": "शेर", "col": "#F4511E", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIzMCIgZmlsbD0iI0ZGOEYwMCIgb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMjIiIGZpbGw9IiNGRkE3MjYiLz48Y2lyY2xlIGN4PSI0MiIgY3k9IjQ2IiByPSIzLjUiIGZpbGw9IiMzMzMiLz48Y2lyY2xlIGN4PSI1OCIgY3k9IjQ2IiByPSIzLjUiIGZpbGw9IiMzMzMiLz48ZWxsaXBzZSBjeD0iNTAiIGN5PSI1NiIgcng9IjgiIHJ5PSI1IiBmaWxsPSIjRkY3MDQzIi8+PHBhdGggZD0iTTQ0IDYyIFE1MCA2OCA1NiA2MiIgc3Ryb2tlPSIjQkYzNjBDIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz48L3N2Zz4="}, {"l": "M", "sound": "muh", "word": "Moon", "hindi": "चाँद", "col": "#6D4C41", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNTUgMTggUTgyIDE4IDgyIDUwIFE4MiA4MiA1NSA4MiBRMzggNzYgMzggNTAgUTM4IDI0IDU1IDE4WiIgZmlsbD0iI0ZGRjlDNCIvPjxjaXJjbGUgY3g9IjYyIiBjeT0iMzAiIHI9IjE4IiBmaWxsPSIjRkZGOEYwIi8+PGNpcmNsZSBjeD0iNDIiIGN5PSI0NCIgcj0iMyIgZmlsbD0iI0Y1RjVEQyIgb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iNjIiIGN5PSI2NSIgcj0iMiIgZmlsbD0iI0Y1RjVEQyIgb3BhY2l0eT0iMC42Ii8+PC9zdmc+"}, {"l": "N", "sound": "nuh", "word": "Nest", "hindi": "घोंसला", "col": "#546E7A", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTggNjggUTMwIDQ4IDUwIDQ2IFE3MCA0OCA4MiA2OCBRNzAgNzggNTAgNzggUTMwIDc4IDE4IDY4WiIgZmlsbD0iIzhENkU2MyIvPjxwYXRoIGQ9Ik0yMiA2NiBRMzQgNTIgNTAgNTAgUTY2IDUyIDc4IDY2IiBzdHJva2U9IiM1RDQwMzciIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIvPjxlbGxpcHNlIGN4PSI0MiIgY3k9IjU0IiByeD0iOCIgcnk9IjYiIGZpbGw9IiNGRkY5QzQiLz48ZWxsaXBzZSBjeD0iNTYiIGN5PSI1MiIgcng9IjgiIHJ5PSI2IiBmaWxsPSIjRkZGOUM0Ii8+PGVsbGlwc2UgY3g9IjQ5IiBjeT0iNTgiIHJ4PSI4IiByeT0iNiIgZmlsbD0iI0ZGRkRFNyIvPjwvc3ZnPg=="}, {"l": "O", "sound": "oh", "word": "Orange", "hindi": "संतरा", "col": "#F57C00", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjU0IiByPSIzMiIgZmlsbD0iI0ZGOEYwMCIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNTQiIHI9IjI4IiBmaWxsPSIjRkZBNzI2Ii8+PGxpbmUgeDE9IjUwIiB5MT0iMjIiIHgyPSI1MCIgeTI9IjE0IiBzdHJva2U9IiM1RDQwMzciIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTUwIDE0IFE2MiA4IDY0IDE4IiBzdHJva2U9IiM0M0EwNDciIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGVsbGlwc2UgY3g9IjQwIiBjeT0iNTAiIHJ4PSI2IiByeT0iMTAiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xNSkiIHRyYW5zZm9ybT0icm90YXRlKC0yMCA0MCA1MCkiLz48L3N2Zz4="}, {"l": "P", "sound": "puh", "word": "Parrot", "hindi": "तोता", "col": "#2E7D32", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZWxsaXBzZSBjeD0iNTAiIGN5PSI2MCIgcng9IjIwIiByeT0iMjYiIGZpbGw9IiM0M0EwNDciLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjM2IiByPSIxOCIgZmlsbD0iIzJFN0QzMiIvPjxwYXRoIGQ9Ik02MiAzMiBRNzYgMjggNzQgNDAgUTY4IDM4IDYyIDM4WiIgZmlsbD0iI0ZGOEYwMCIvPjxjaXJjbGUgY3g9IjQ0IiBjeT0iMzIiIHI9IjMiIGZpbGw9IiMzMzMiLz48ZWxsaXBzZSBjeD0iNTAiIGN5PSI0MiIgcng9IjgiIHJ5PSI1IiBmaWxsPSIjNjZCQjZBIi8+PC9zdmc+"}, {"l": "Q", "sound": "kwuh", "word": "Queen", "hindi": "रानी", "col": "#6A1B9A", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIyOCIgeT0iNTAiIHdpZHRoPSI0NCIgaGVpZ2h0PSIzNiIgcng9IjQiIGZpbGw9IiM3QjFGQTIiLz48cG9seWdvbiBwb2ludHM9IjI4LDUwIDE4LDI4IDM2LDQwIDUwLDIwIDY0LDQwIDgyLDI4IDcyLDUwIiBmaWxsPSIjQUI0N0JDIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSIyOCIgcj0iNSIgZmlsbD0iI0ZGRDcwMCIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iMjAiIHI9IjUiIGZpbGw9IiNGRkQ3MDAiLz48Y2lyY2xlIGN4PSI4MiIgY3k9IjI4IiByPSI1IiBmaWxsPSIjRkZENzAwIi8+PC9zdmc+"}, {"l": "R", "sound": "ruh", "word": "Rain", "hindi": "बारिश", "col": "#1565C0", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZWxsaXBzZSBjeD0iNTAiIGN5PSIzNiIgcng9IjI4IiByeT0iMTgiIGZpbGw9IiM5MEE0QUUiLz48ZWxsaXBzZSBjeD0iMzQiIGN5PSI0MCIgcng9IjIwIiByeT0iMTQiIGZpbGw9IiNCMEJFQzUiLz48ZWxsaXBzZSBjeD0iNjQiIGN5PSIzOCIgcng9IjE4IiByeT0iMTMiIGZpbGw9IiM5MEE0QUUiLz48bGluZSB4MT0iMzAiIHkxPSI1OCIgeDI9IjI2IiB5Mj0iNzQiIHN0cm9rZT0iIzQyQTVGNSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48bGluZSB4MT0iNDQiIHkxPSI2MCIgeDI9IjQwIiB5Mj0iNzYiIHN0cm9rZT0iIzQyQTVGNSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48bGluZSB4MT0iNTgiIHkxPSI1OCIgeDI9IjU0IiB5Mj0iNzQiIHN0cm9rZT0iIzQyQTVGNSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48bGluZSB4MT0iNzIiIHkxPSI2MCIgeDI9IjY4IiB5Mj0iNzYiIHN0cm9rZT0iIzQyQTVGNSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4="}, {"l": "S", "sound": "suh", "word": "Sun", "hindi": "सूरज", "col": "#FF8F00", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIyMiIgZmlsbD0iI0ZGRDcwMCIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjE2IiBmaWxsPSIjRkZBNzI2Ii8+PGxpbmUgeDE9IjUwIiB5MT0iNTAiIHgyPSI4NiIgeTI9IjUwIiBzdHJva2U9IiNGRkQ3MDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGxpbmUgeDE9IjUwIiB5MT0iNTAiIHgyPSI3NSIgeTI9Ijc1IiBzdHJva2U9IiNGRkQ3MDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGxpbmUgeDE9IjUwIiB5MT0iNTAiIHgyPSI1MCIgeTI9Ijg2IiBzdHJva2U9IiNGRkQ3MDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGxpbmUgeDE9IjUwIiB5MT0iNTAiIHgyPSIyNCIgeTI9Ijc1IiBzdHJva2U9IiNGRkQ3MDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGxpbmUgeDE9IjUwIiB5MT0iNTAiIHgyPSIxNCIgeTI9IjUwIiBzdHJva2U9IiNGRkQ3MDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGxpbmUgeDE9IjUwIiB5MT0iNTAiIHgyPSIyNCIgeTI9IjI0IiBzdHJva2U9IiNGRkQ3MDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGxpbmUgeDE9IjUwIiB5MT0iNTAiIHgyPSI0OSIgeTI9IjE0IiBzdHJva2U9IiNGRkQ3MDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGxpbmUgeDE9IjUwIiB5MT0iNTAiIHgyPSI3NSIgeTI9IjI0IiBzdHJva2U9IiNGRkQ3MDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+"}, {"l": "T", "sound": "tuh", "word": "Tree", "hindi": "पेड़", "col": "#2E7D32", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSI0NCIgeT0iNjgiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyMiIgcng9IjMiIGZpbGw9IiM4RDZFNjMiLz48cG9seWdvbiBwb2ludHM9IjUwLDEyIDc2LDUyIDI0LDUyIiBmaWxsPSIjMkU3RDMyIi8+PHBvbHlnb24gcG9pbnRzPSI1MCwyNCA3Miw1OCAyOCw1OCIgZmlsbD0iIzM4OEUzQyIvPjxwb2x5Z29uIHBvaW50cz0iNTAsMzYgNjgsNjYgMzIsNjYiIGZpbGw9IiM0M0EwNDciLz48L3N2Zz4="}, {"l": "U", "sound": "uh", "word": "Umbrella", "hindi": "छाता", "col": "#4527A0", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTQgNTAgUTE0IDIwIDUwIDE4IFE4NiAyMCA4NiA1MFoiIGZpbGw9IiM3QjFGQTIiLz48cGF0aCBkPSJNMTQgNTAgUTI2IDM4IDM4IDUwIFE0NCAzOCA1MCA1MCBRNTYgMzggNjIgNTAgUTc0IDM4IDg2IDUwIiBzdHJva2U9IiNDRTkzRDgiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIvPjxsaW5lIHgxPSI1MCIgeTE9IjUwIiB4Mj0iNTAiIHkyPSI4MiIgc3Ryb2tlPSIjNEExNDhDIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik01MCA4MiBRNTggODIgNTggOTAgUTU4IDk2IDUwIDk2IiBzdHJva2U9IiM0QTE0OEMiIHN0cm9rZS13aWR0aD0iNCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+"}, {"l": "V", "sound": "vuh", "word": "Van", "hindi": "वैन", "col": "#00695C", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIxMCIgeT0iMzYiIHdpZHRoPSI4MCIgaGVpZ2h0PSIzOCIgcng9IjYiIGZpbGw9IiMwMDY5NUMiLz48cmVjdCB4PSI1MiIgeT0iMzgiIHdpZHRoPSIzNCIgaGVpZ2h0PSIyMiIgcng9IjMiIGZpbGw9IiNCMkVCRjIiLz48cmVjdCB4PSIxNCIgeT0iMzgiIHdpZHRoPSIzNCIgaGVpZ2h0PSIyMiIgcng9IjMiIGZpbGw9IiNCMkVCRjIiLz48Y2lyY2xlIGN4PSIyNiIgY3k9Ijc2IiByPSI5IiBmaWxsPSIjMzMzIi8+PGNpcmNsZSBjeD0iMjYiIGN5PSI3NiIgcj0iNCIgZmlsbD0iI2FhYSIvPjxjaXJjbGUgY3g9Ijc0IiBjeT0iNzYiIHI9IjkiIGZpbGw9IiMzMzMiLz48Y2lyY2xlIGN4PSI3NCIgY3k9Ijc2IiByPSI0IiBmaWxsPSIjYWFhIi8+PC9zdmc+"}, {"l": "W", "sound": "wuh", "word": "Water", "hindi": "पानी", "col": "#0277BD", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNTAgMTQgUTM2IDM4IDMwIDUyIFEyNCA2OCA1MCA4MiBRNzYgNjggNzAgNTIgUTY0IDM4IDUwIDE0WiIgZmlsbD0iIzI5QjZGNiIvPjxwYXRoIGQ9Ik01MCAyNiBRNDAgNDQgMzYgNTYgUTM0IDY2IDUwIDc0IiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC40KSIgc3Ryb2tlLXdpZHRoPSI0IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4="}, {"l": "X", "sound": "ks", "word": "X-ray", "hindi": "एक्स-रे", "col": "#37474F", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIyMCIgeT0iMTYiIHdpZHRoPSI2MCIgaGVpZ2h0PSI3MiIgcng9IjQiIGZpbGw9IiMzNzQ3NEYiLz48cmVjdCB4PSIyNCIgeT0iMjAiIHdpZHRoPSI1MiIgaGVpZ2h0PSI2NCIgcng9IjMiIGZpbGw9IiMyNjMyMzgiLz48bGluZSB4MT0iMzYiIHkxPSIzMiIgeDI9IjY0IiB5Mj0iODAiIHN0cm9rZT0iI0NGRDhEQyIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48bGluZSB4MT0iNjQiIHkxPSIzMiIgeDI9IjM2IiB5Mj0iODAiIHN0cm9rZT0iI0NGRDhEQyIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4="}, {"l": "Y", "sound": "yuh", "word": "Yak", "hindi": "याक", "col": "#4E342E", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZWxsaXBzZSBjeD0iNTQiIGN5PSI1OCIgcng9IjI4IiByeT0iMTgiIGZpbGw9IiM0RTM0MkUiLz48Y2lyY2xlIGN4PSIzMCIgY3k9IjQ4IiByPSIxNiIgZmlsbD0iIzRFMzQyRSIvPjxwYXRoIGQ9Ik0yMiAzNiBRMTggMjIgMjQgMjAgUTI0IDMyIDI4IDM0WiIgZmlsbD0iIzRFMzQyRSIvPjxwYXRoIGQ9Ik0zMiAzMiBRMzIgMTggMzggMTggUTM2IDMwIDMyIDM0WiIgZmlsbD0iIzRFMzQyRSIvPjxjaXJjbGUgY3g9IjI2IiBjeT0iNDQiIHI9IjIuNSIgZmlsbD0iIzMzMyIvPjxsaW5lIHgxPSI0MCIgeTE9Ijc2IiB4Mj0iMzgiIHkyPSI5MiIgc3Ryb2tlPSIjM0UyNzIzIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxsaW5lIHgxPSI2NiIgeTE9Ijc2IiB4Mj0iNjgiIHkyPSI5MiIgc3Ryb2tlPSIjM0UyNzIzIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg=="}, {"l": "Z", "sound": "zuh", "word": "Zebra", "hindi": "ज़ेब्रा", "col": "#212121", "img": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZWxsaXBzZSBjeD0iNTQiIGN5PSI1OCIgcng9IjI4IiByeT0iMTgiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iNDYiIHI9IjE2IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzMzIiBzdHJva2Utd2lkdGg9IjIiLz48bGluZSB4MT0iMjQiIHkxPSI0MCIgeDI9IjM2IiB5Mj0iNDAiIHN0cm9rZT0iIzMzMyIgc3Ryb2tlLXdpZHRoPSIzIi8+PGxpbmUgeDE9IjI2IiB5MT0iNDgiIHgyPSIzOCIgeTI9IjUwIiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMyIvPjxsaW5lIHgxPSI0MiIgeTE9IjUyIiB4Mj0iNTgiIHkyPSI1MiIgc3Ryb2tlPSIjMzMzIiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iNDQiIHkxPSI2MiIgeDI9IjYwIiB5Mj0iNjIiIHN0cm9rZT0iIzMzMyIgc3Ryb2tlLXdpZHRoPSIzIi8+PGNpcmNsZSBjeD0iMjYiIGN5PSI0MiIgcj0iMi41IiBmaWxsPSIjMzMzIi8+PC9zdmc+"}];
+
+var cur=0;
+
+function show(i){
+  cur=i;
+  var d=DATA[i];
+  // grid highlight
+  var btns=document.getElementById('grid').querySelectorAll('button');
+  for(var j=0;j<btns.length;j++){
+    btns[j].style.background = j===i ? d.col : '#f0f0f0';
+    btns[j].style.color = j===i ? '#fff' : '#555';
+  }
+  // card border
+  document.getElementById('card').style.borderColor=d.col;
+  // letter
+  var bl=document.getElementById('bigL');
+  bl.textContent=d.l;
+  bl.style.color=d.col;
+  document.getElementById('cases').textContent=d.l+' / '+d.l.toLowerCase();
+  // sound
+  var sv=document.getElementById('soundVal');
+  sv.textContent='"'+d.sound+'"';
+  sv.style.color=d.col;
+  // picture
+  document.getElementById('pic').src=d.img;
+  // word
+  var we=document.getElementById('weng');
+  we.textContent=d.word;
+  we.style.color=d.col;
+  document.getElementById('whin').textContent=d.hindi;
+  // say it
+  document.getElementById('sayit').textContent=d.l+' says "'+d.sound+'" — like in '+d.word+' ('+d.hindi+')';
+}
+
+// Build grid
+var grid=document.getElementById('grid');
+for(var i=0;i<DATA.length;i++){
+  (function(idx){
+    var b=document.createElement('button');
+    b.className='ag';
+    b.textContent=DATA[idx].l;
+    b.onclick=function(){show(idx);};
+    grid.appendChild(b);
+  })(i);
+}
+
+document.getElementById('btnPrev').onclick=function(){show((cur-1+DATA.length)%DATA.length);};
+document.getElementById('btnNext').onclick=function(){show((cur+1)%DATA.length);};
+
+show(0);
+</script>
+</body>
+</html>
